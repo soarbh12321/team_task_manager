@@ -21,6 +21,7 @@ export default function Tasks() {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [priority, setPriority] = useState<TaskPriority>(TaskPriority.MEDIUM);
+  const [assigneeId, setAssigneeId] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,11 +72,13 @@ export default function Tasks() {
       description: description || undefined,
       dueDate: dueDate || undefined,
       priority,
+      assigneeId: assigneeId || undefined,
     });
 
     setTitle("");
     setDescription("");
     setDueDate("");
+    setAssigneeId("");
     await loadTasks(selectedProjectId);
   }
 
@@ -144,6 +147,18 @@ export default function Tasks() {
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
+            </select>
+            <select
+              className="input"
+              value={assigneeId}
+              onChange={(event) => setAssigneeId(event.target.value)}
+            >
+              <option value="">Unassigned</option>
+              {selectedProject?.team?.members?.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.full_name}
+                </option>
+              ))}
             </select>
             <Button type="submit">Create task</Button>
           </form>
